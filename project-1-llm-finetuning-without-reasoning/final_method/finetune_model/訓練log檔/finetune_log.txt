@@ -1,0 +1,74 @@
+2025-04-08 18:37:42,355 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:37:42,355 - INFO - 顯存: 23.99 GB
+2025-04-08 18:37:42,356 - INFO - 執行模式: train
+2025-04-08 18:37:42,356 - INFO - 模型: qwen_QwQ
+2025-04-08 18:37:42,356 - INFO - 模型路徑: ./results/final_model
+2025-04-08 18:37:42,356 - INFO - 正在從Hugging Face下載模型: Qwen/QwQ-32B
+2025-04-08 18:37:42,356 - INFO - 下載tokenizer...
+2025-04-08 18:37:43,071 - INFO - 下載模型（這可能需要幾分鐘時間）...
+2025-04-08 18:37:44,440 - ERROR - 模型下載失敗: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. 
+2025-04-08 18:37:44,442 - INFO - 嘗試使用較大超時時間和降低記憶體使用重新下載...
+2025-04-08 18:51:08,386 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:08,386 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:08,386 - INFO - 執行模式: train
+2025-04-08 18:51:08,386 - INFO - 模型: qwen2.5_1m
+2025-04-08 18:51:08,386 - INFO - 模型路徑: ./results/final_model
+2025-04-08 18:51:08,386 - INFO - 正在從Hugging Face下載模型: Qwen/Qwen2.5-14B-Instruct-1M
+2025-04-08 18:51:08,386 - INFO - 下載tokenizer...
+2025-04-08 18:51:08,841 - INFO - 下載模型（這可能需要幾分鐘時間）...
+2025-04-08 18:51:16,572 - INFO - 模型下載完成!
+2025-04-08 18:51:17,437 - INFO - 可訓練參數: 137,625,600 (0.92% of 14,907,659,264)
+2025-04-08 18:51:17,452 - INFO - CSV文件的欄位名稱: ['ID', 'question', 'option_A', 'option_B', 'option_C', 'option_D', 'answer']
+2025-04-08 18:51:17,452 - INFO - 讀取了 2949 筆訓練數據
+2025-04-08 18:51:17,452 - INFO - 为调试目的将数据集限制为1000个样本
+2025-04-08 18:51:17,452 - INFO - 使用答案作為分層特徵進行驗證集分割
+2025-04-08 18:51:17,452 - WARNING - 分層抽樣失敗: Input contains NaN，使用隨機抽樣代替
+2025-04-08 18:51:17,452 - INFO - 訓練集答案分佈: {'A': np.float64(0.3670745272525028), 'B': np.float64(0.3337041156840934), 'C': np.float64(0.16017797552836485), 'D': np.float64(0.13904338153503892)}
+2025-04-08 18:51:17,452 - INFO - 驗證集答案分佈: {'A': np.float64(0.43), 'B': np.float64(0.32), 'C': np.float64(0.14), 'D': np.float64(0.11)}
+2025-04-08 18:51:17,489 - INFO - 使用tokenizer處理訓練和驗證數據...
+2025-04-08 18:51:23,416 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,416 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,416 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,416 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,416 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,425 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,425 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,425 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,426 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,426 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,426 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,426 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,428 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,428 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,430 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,430 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:23,432 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:23,432 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:30,898 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:30,898 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,114 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,114 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,119 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,119 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,125 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,125 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,136 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,136 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,142 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,142 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,148 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,148 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,150 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,150 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:31,152 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 18:51:31,152 - INFO - 顯存: 23.99 GB
+2025-04-08 18:51:32,964 - INFO - 處理完成: 訓練集大小: 900 樣本
+2025-04-08 18:51:32,964 - INFO - 驗證集大小: 100 樣本
+2025-04-08 18:51:33,870 - INFO - "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\bin\HostX86\x64\cl.exe" /c /nologo /O2 /W3 /GL /DNDEBUG /MD "-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\include" "-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include" "-IC:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt" "-IC:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" /TcC:\Users\NTHUILST\AppData\Local\Temp\tmpqpttydbe\test.c /FoC:\Users\NTHUILST\AppData\Local\Temp\tmpqpttydbe\test.obj
+2025-04-08 18:51:33,982 - INFO - "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\bin\HostX86\x64\link.exe" /nologo /INCREMENTAL:NO /LTCG /MANIFEST:EMBED,ID=1 "/LIBPATH:C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\lib\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\lib\um\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\ucrt\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\10\\lib\10.0.22621.0\\um\x64" aio.lib C:\Users\NTHUILST\AppData\Local\Temp\tmpqpttydbe\test.obj /OUT:C:\Users\NTHUILST\AppData\Local\Temp\tmpqpttydbe\a.out.exe
+2025-04-08 18:51:35,089 - INFO - "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\bin\HostX86\x64\cl.exe" /c /nologo /O2 /W3 /GL /DNDEBUG /MD "-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\include" "-IC:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include" "-IC:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt" "-IC:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" /TcC:\Users\NTHUILST\AppData\Local\Temp\tmpyybm5ual\test.c /FoC:\Users\NTHUILST\AppData\Local\Temp\tmpyybm5ual\test.obj
+2025-04-08 18:51:35,104 - INFO - "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\bin\HostX86\x64\link.exe" /nologo /INCREMENTAL:NO /LTCG /MANIFEST:EMBED,ID=1 "/LIBPATH:C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.5" "/LIBPATH:C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.5\lib64" "/LIBPATH:C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.37.32822\lib\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\lib\um\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\ucrt\x64" "/LIBPATH:C:\Program Files (x86)\Windows Kits\10\\lib\10.0.22621.0\\um\x64" cufile.lib C:\Users\NTHUILST\AppData\Local\Temp\tmpyybm5ual\test.obj /OUT:C:\Users\NTHUILST\AppData\Local\Temp\tmpyybm5ual\a.out.exe
+2025-04-08 23:02:31,974 - INFO - GPU: NVIDIA GeForce RTX 4090
+2025-04-08 23:02:31,974 - INFO - 顯存: 23.99 GB
+2025-04-08 23:02:31,975 - INFO - 執行模式: predict
+2025-04-08 23:02:31,975 - INFO - 模型: qwen2.5_1m

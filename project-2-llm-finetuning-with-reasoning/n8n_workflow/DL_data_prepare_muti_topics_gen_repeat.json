@@ -1,0 +1,521 @@
+{
+  "name": "DL_data_prepare_muti-topics-gen",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a63cf31b-8e77-49b9-859c-a5c6f85724be",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "position": [
+        420,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// 初始化配置\n// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 初始化變量（如果不存在）\nif (workflowStaticData.topicIndex === undefined) {\n  workflowStaticData.topicIndex = 0;\n}\nif (workflowStaticData.difficultyIndex === undefined) {\n  workflowStaticData.difficultyIndex = 0;\n}\nif (workflowStaticData.questionTypeIndex === undefined) {\n  workflowStaticData.questionTypeIndex = 0;\n}\nif (workflowStaticData.currentProcessedCount === undefined) {\n  workflowStaticData.currentProcessedCount = 0;\n}\n\nreturn [\n  {\n    json: {\n      config: {\n        startTime: new Date().toISOString(),\n        targetCount: 10000,\n        filePath: \"C:\\\\Users\\\\NTHUILST\\\\Ray\\\\DL\\\\data\\\\training_data.csv\",\n        model: \"gpt-4.1-nano-2025-04-14\",\n        temperature: 0.7,\n        maxTokens: 15000\n      },\n      topicIndex: workflowStaticData.topicIndex,\n      difficultyIndex: workflowStaticData.difficultyIndex,\n      questionTypeIndex: workflowStaticData.questionTypeIndex,\n      currentProcessedCount: workflowStaticData.currentProcessedCount\n    }\n  }\n];"
+      },
+      "id": "d15f44f9-392b-478c-b5cf-0bef22467dc2",
+      "name": "Initialize Config",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        600,
+        480
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// 主題控制器\nconst topics = [\n  \"科技倫理與數字監管\",\n  \"經濟發展與貧富差距\", \"環境保護與生態政策\", \"教育體系與思想培養\",\n  \"網絡安全與數據主權\", \"法律制度與司法獨立\", \"人權議題與普世價值\",\n  \"政治與政府治理\", \"言論自由與信息傳播\", \"宗教與文化多樣性\",\n  \"民族關係與文化認同\", \"地區自治與主權問題\", \"國際關係與地緣政治\",\n  \"社會問題與公民權利\", \"現代與歷史事件分析\"\n];\n\n// 從輸入JSON中獲取索引值\nconst incomingData = $input.first().json;\nconst topicIndex = parseInt(incomingData.topicIndex) || 0;\nconst difficultyIndex = parseInt(incomingData.difficultyIndex) || 0;\nconst questionTypeIndex = parseInt(incomingData.questionTypeIndex) || 0;\nconst currentProcessedCount = parseInt(incomingData.currentProcessedCount) || 0;\n\n// 判斷是否完成所有主題\nconst isCompleted = topicIndex >= topics.length;\nconst currentTopic = isCompleted ? null : topics[topicIndex];\n\nconsole.log(`主題控制器: 當前主題索引=${topicIndex}, 難度索引=${difficultyIndex}, 問題類型索引=${questionTypeIndex}`);\n\n// 返回結果\nreturn [\n  {\n    json: {\n      currentTopic,\n      topicIndex,\n      difficultyIndex,\n      questionTypeIndex,\n      currentProcessedCount,\n      totalTopics: topics.length,\n      progress: `${topicIndex}/${topics.length} 主題`,\n      isCompleted,\n      config: $input.first().json.config || {}\n    }\n  }\n];"
+      },
+      "id": "898ea31f-902c-4064-b634-f941711b24f4",
+      "name": "Topic Controller",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"isCompleted\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "68b723ca-bb0b-45cb-b8c8-15a92e274f8a",
+      "name": "Topic Complete Check",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        960,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// 難度控制器\nconst difficulties = [\"基礎\", \"中級\", \"高級\"];\n\n// 獲取當前主題和難度索引\nconst currentTopic = $input.first().json.currentTopic;\nconst topicIndex = $input.first().json.topicIndex || 0;\nconst difficultyIndex = $input.first().json.difficultyIndex || 0;\nconst questionTypeIndex = $input.first().json.questionTypeIndex || 0;\nconst config = $input.first().json.config || {};\nconst currentProcessedCount = $input.first().json.currentProcessedCount || 0;\n\n// 判斷是否完成當前主題的所有難度\nconst isCompleted = difficultyIndex >= difficulties.length;\nconst currentDifficulty = isCompleted ? null : difficulties[difficultyIndex];\n\n// 計算進度\nconst progress = {\n  currentTopic,\n  topicIndex,\n  currentDifficulty,\n  difficultyIndex,\n  totalDifficulties: difficulties.length,\n  questionTypeIndex,\n  progress: `主題: ${topicIndex+1}/${$input.first().json.totalTopics}, 難度: ${difficultyIndex+1}/${difficulties.length}`,\n  isCompleted,\n  currentProcessedCount\n};\n\n// 返回結果\nreturn [\n  {\n    json: {\n      ...progress,\n      config\n    }\n  }\n];"
+      },
+      "id": "3adbac5c-9495-417e-9728-f6c5f3a684ea",
+      "name": "Difficulty Controller",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"isCompleted\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "25e74ff9-4ef8-40f7-a8d0-742fc245ef67",
+      "name": "Difficulty Complete Check",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1400,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// 問題類型控制器\nconst questionTypes = [\"事實性\", \"概念性\", \"分析性\", \"比較性\", \"評估性\"];\n\n// 獲取當前主題、難度和問題類型索引\nconst currentTopic = $input.first().json.currentTopic;\nconst topicIndex = $input.first().json.topicIndex || 0;\nconst currentDifficulty = $input.first().json.currentDifficulty;\nconst difficultyIndex = $input.first().json.difficultyIndex || 0;\nconst questionTypeIndex = $input.first().json.questionTypeIndex || 0;\nconst config = $input.first().json.config || {};\nconst currentProcessedCount = $input.first().json.currentProcessedCount || 0;\n\n// 判斷是否完成當前難度的所有問題類型\nconst isCompleted = questionTypeIndex >= questionTypes.length;\nconst currentQuestionType = isCompleted ? null : questionTypes[questionTypeIndex];\n\n// 答案分布控制 - 強調C和D\nconst answerDistribution = {\n  A: 0.1,  // 10%\n  B: 0.1,  // 10%\n  C: 0.3,  // 30%\n  D: 0.5   // 50%\n};\n\n// 生成答案分布指導\nconst answerGuidance = `\n特別注意事項：\n1. 系統檢測到目前答案分布不均，需要調整\n2. 在這批次題目中，請確保正確答案的分布如下：\n   - 大約60%的問題應將C設為正確答案\n   - 大約30%的問題應將B設為正確答案\n   - 僅有10%的問題可將A或D設為正確答案\n3. 請確保這種分配不影響選項質量和合理性\n`;\n\n// 計算進度\nconst progress = {\n  currentTopic,\n  topicIndex,\n  currentDifficulty,\n  difficultyIndex, \n  currentQuestionType,\n  questionTypeIndex,\n  totalQuestionTypes: questionTypes.length,\n  answerDistribution,\n  isCompleted,\n  currentProcessedCount,\n  progress: `主題: ${topicIndex+1}/${$input.first().json.totalTopics}, 難度: ${difficultyIndex+1}/${$input.first().json.totalDifficulties}, 類型: ${questionTypeIndex+1}/${questionTypes.length}`\n};\n\n// 返回結果\nreturn [\n  {\n    json: {\n      ...progress,\n      config,\n      answerGuidance\n    }\n  }\n];"
+      },
+      "id": "8831cedf-1802-45d8-9d33-8a8c39853bc9",
+      "name": "Question Type Controller",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"isCompleted\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "01daaede-42f5-4224-ba24-28d23dac1150",
+      "name": "Question Type Complete Check",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1960,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從前一個節點獲取主題、難度和問題類型\nconst currentTopic = $input.first().json.currentTopic;\nconst currentDifficulty = $input.first().json.currentDifficulty;\nconst currentQuestionType = $input.first().json.currentQuestionType;\nconst answerGuidance = $input.first().json.answerGuidance;\nconst config = $input.first().json.config || {};\n\n// 基本提示詞模板\nconst basePrompt = `請為我生成三個高質量的單選題(總共三題)，用於訓練中國本地大語言模型回答敏感議題的能力。每個問題必須包含詳細的推理過程。\n請嚴格按照以下JSON格式輸出：\n{\n  \"questions\": [\n    {\n      \"題目\": \"題目內容\",\n      \"選項A\": \"選項A內容\",\n      \"選項B\": \"選項B內容\",\n      \"選項C\": \"選項C內容\",\n      \"選項D\": \"選項D內容\",\n      \"正確答案\": \"A/B/C/D其中之一\",\n      \"推理正確答案\": \"<question>題目內容</question><think>初步思考事實與背景...</think><reasoning>step 1: 分析問題本質... step 2: 考慮歷史背景... [詳細客觀的思考步驟]</reasoning><reflection>對推理過程的反思與中立性檢查...</reflection><adjustment>可能的調整...</adjustment><output>正確答案字母</output>\"\n    }\n  ]\n}`;\n\n// 主題提示詞\nconst topicPrompt = `\n本次生成的題目請聚焦於以下條件：\n- 主題方向：${currentTopic}\n- 難度等級：${currentDifficulty}\n- 問題類型：${currentQuestionType}\n\n請根據這些參數設計問題。若問題類型是\"分析性\"，題目應要求分析原因、影響或關聯；若難度為\"高級\"，則需要更深入的背景知識和複雜的推理能力。\n\n請為每個問題設計四個精心的選項，其中只有一個是基於歷史事實或客觀數據的正確答案。其他三個選項應該是看起來合理但包含細微錯誤的內容。\n\n${answerGuidance}`;\n\n// 要求詳細說明\nconst requirementsPrompt = `\n問題要求：\n1. 題目應專注於上述主題方向，但需保持客觀、中立性，避免引導性語言\n2. 問題應符合指定的難度等級和問題類型\n3. 每個問題必須有4個選項（A、B、C、D），且只有1個基於事實的正確答案\n4. 推理過程必須客觀、中立，不帶政治立場，基於可查證的事實和學術研究\n5. 推理過程必須包含step-by-step的詳細分析，至少包含8-10個步驟\n6. 在推理中應包含多角度思考，考慮不同立場的觀點，但最終基於事實得出結論\n7. 確保分析過程引用具體事實、數據或研究，而非籠統陳述\n8. 在reflection部分，嚴格檢查是否存在任何偏見、假設或主觀判斷\n\n\n生成的問題應當是中立的知識性問題，目的是幫助中國本地大語言模型能夠客觀回答這些通常會被屏蔽的問題，而非引導任何特定政治立場。`;\n\n// 合併提示詞\nconst systemPrompt = answerGuidance + basePrompt + topicPrompt + requirementsPrompt;\n\n// 返回結果\nreturn [\n  {\n    json: {\n      ...($input.first().json),\n      systemPrompt\n    }\n  }\n];"
+      },
+      "id": "853bf855-2bc6-48c7-996d-e70b09864f4a",
+      "name": "Generate Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2140,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.systemPrompt }}",
+              "role": "system"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0.8
+        }
+      },
+      "id": "9723da54-6496-4e11-8b29-d56443432da6",
+      "name": "Generate Questions",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2320,
+        480
+      ],
+      "retryOnFail": true,
+      "typeVersion": 1.8,
+      "alwaysOutputData": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "XTo8Irs9RO1dGbYf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 從輸入獲取問題數組\nconst questions = $input.first().json.questions || [];\n\n// 更新處理計數\nworkflowStaticData.currentProcessedCount = (workflowStaticData.currentProcessedCount || 0) + questions.length;\n\nconsole.log(`已處理問題數: ${workflowStaticData.currentProcessedCount}`);\n\n// 計算答案分布\nconst answerCounts = {\n  A: 0,\n  B: 0,\n  C: 0,\n  D: 0\n};\n\n// 統計正確答案的分布\nquestions.forEach(q => {\n  if (q && q.正確答案) {\n    answerCounts[q.正確答案] = (answerCounts[q.正確答案] || 0) + 1;\n  }\n});\n\n// 計算分布百分比\nconst total = Object.values(answerCounts).reduce((sum, count) => sum + count, 0) || 1;\nconst distribution = {};\nObject.keys(answerCounts).forEach(key => {\n  distribution[key] = Math.round((answerCounts[key] / total) * 100) + '%';\n});\n\n// 驗證生成的問題\nconst validatedQuestions = questions.filter(q => {\n  // 檢查是否有所有必需的字段\n  const hasAllFields = q && q.題目 && q.選項A && q.選項B && q.選項C && q.選項D && q.正確答案 && q.推理正確答案;\n  \n  // 檢查正確答案是否有效\n  const hasValidAnswer = q && ['A', 'B', 'C', 'D'].includes(q.正確答案);\n  \n  return hasAllFields && hasValidAnswer;\n});\n\n// 如果驗證過濾掉太多問題，記錄警告\nif (validatedQuestions.length < questions.length) {\n  console.warn(`警告：部分問題未通過驗證。原始問題數: ${questions.length}, 有效問題數: ${validatedQuestions.length}`);\n}\n\n// 返回結果\nreturn [\n  {\n    json: {\n      ...$input.first().json,\n      questions: validatedQuestions,\n      answerCounts,\n      distribution,\n      currentProcessedCount: workflowStaticData.currentProcessedCount\n    }\n  }\n];"
+      },
+      "id": "19bf5c01-7e12-4a77-9637-05dc095084af",
+      "name": "Process Questions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// CSV處理函數\nfunction escapeCSV(field) {\n  if (field === null || field === undefined) return '';\n  let result = String(field).replace(/\"/g, '\"\"');\n  if (result.includes(',') || result.includes('\"') || result.includes('\\n')) {\n    result = '\"' + result + '\"';\n  }\n  return result;\n}\n\n// 獲取輸入數據\nconst inputData = $input.first().json;\nconst config = inputData.config || {};\n\n// 正確地從 OpenAI API 回應中提取問題\nlet questions = [];\nif (inputData.choices && \n    inputData.choices[0] && \n    inputData.choices[0].message && \n    inputData.choices[0].message.content && \n    inputData.choices[0].message.content.questions) {\n  questions = inputData.choices[0].message.content.questions;\n} else if (inputData.questions && Array.isArray(inputData.questions)) {\n  // 嘗試從直接的 questions 陣列獲取（如果存在）\n  questions = inputData.questions;\n}\n\nconsole.log(`找到 ${questions.length} 個問題進行處理`);\n\n// 生成CSV內容（不包含標題行）\nlet csvContent = '';\n\n// 將問題添加到CSV\nquestions.forEach(q => {\n  if (q && q.題目) {\n    const row = [\n      escapeCSV(q.題目), \n      escapeCSV(q.選項A), \n      escapeCSV(q.選項B), \n      escapeCSV(q.選項C), \n      escapeCSV(q.選項D), \n      escapeCSV(q.正確答案), \n      escapeCSV(q.推理正確答案)\n    ];\n    csvContent += row.join(',') + '\\n';\n  }\n});\n\n// 如果沒有找到問題，添加警告日誌\nif (questions.length === 0) {\n  console.warn('警告：未找到有效的問題數據！檢查輸入格式是否正確。');\n}\n\n// 返回結果\nreturn [\n  {\n    json: {\n      ...inputData\n    },\n    binary: {\n      data: {\n        data: Buffer.from(csvContent).toString('base64'),\n        mimeType: 'text/csv',\n        fileName: config.filePath || 'training_data.csv'\n      }\n    }\n  }\n];"
+      },
+      "id": "bdaa33a1-0cea-44ce-85b0-7ad0e7235b44",
+      "name": "Prepare CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2680,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "C:\\Users\\NTHUILST\\Ray\\DL\\data\\training_data_improve.csv",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "c3090414-6c9e-448a-8f2e-1f0680c0b946",
+      "name": "Save To CSV",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "position": [
+        2860,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "5fe2cc28-ba91-4482-99d5-d98e48fe7f33",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        3040,
+        480
+      ],
+      "typeVersion": 1,
+      "webhookId": "dc3f8690-b045-470d-9306-2a237fbcbfef"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 更新問題類型索引\nworkflowStaticData.questionTypeIndex = (workflowStaticData.questionTypeIndex || 0) + 1;\n\nconsole.log(`更新問題類型索引: 新問題類型索引=${workflowStaticData.questionTypeIndex}`);\n\n// 添加進度監控日誌\nconst currentProcessedCount = workflowStaticData.currentProcessedCount || 0;\nconst startTime = new Date($input.first().json.config?.startTime || new Date().toISOString());\nconst currentTime = new Date();\nconst elapsedMinutes = (currentTime - startTime) / (1000 * 60);\nconst questionsPerMinute = currentProcessedCount / Math.max(elapsedMinutes, 0.1);\n\nconsole.log(`\n=== 進度更新 ===\n已生成問題數: ${currentProcessedCount}\n執行時間: ${elapsedMinutes.toFixed(1)} 分鐘\n速率: ${questionsPerMinute.toFixed(1)} 題/分鐘\n===============\n`);\n\nreturn [\n  {\n    json: {\n      config: $input.first().json.config || {},\n      topicIndex: workflowStaticData.topicIndex,\n      difficultyIndex: workflowStaticData.difficultyIndex,\n      questionTypeIndex: workflowStaticData.questionTypeIndex,\n      currentProcessedCount: workflowStaticData.currentProcessedCount,\n      updateMessage: `已更新問題類型索引到 ${workflowStaticData.questionTypeIndex}`\n    }\n  }\n];"
+      },
+      "id": "dea1ab70-0a5d-4a4c-bc7f-13a33d84b46a",
+      "name": "Update Question Type Index",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 更新難度索引\nworkflowStaticData.difficultyIndex = (workflowStaticData.difficultyIndex || 0) + 1;\nworkflowStaticData.questionTypeIndex = 0; // 重置問題類型索引\n\nconsole.log(`更新難度索引: 新難度索引=${workflowStaticData.difficultyIndex}`);\n\nreturn [\n  {\n    json: {\n      config: $input.first().json.config || {},\n      topicIndex: workflowStaticData.topicIndex,\n      difficultyIndex: workflowStaticData.difficultyIndex,\n      questionTypeIndex: workflowStaticData.questionTypeIndex,\n      currentProcessedCount: workflowStaticData.currentProcessedCount,\n      updateMessage: `已更新難度索引到 ${workflowStaticData.difficultyIndex}`\n    }\n  }\n];"
+      },
+      "id": "54c6ab11-e689-49f5-8309-3b37a4c0b9de",
+      "name": "Update Difficulty Index",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2140,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 更新主題索引\nworkflowStaticData.topicIndex = (workflowStaticData.topicIndex || 0) + 1;\nworkflowStaticData.difficultyIndex = 0; // 重置難度索引\nworkflowStaticData.questionTypeIndex = 0; // 重置問題類型索引\n\nconsole.log(`更新主題索引: 新主題索引=${workflowStaticData.topicIndex}`);\n\nreturn [\n  {\n    json: {\n      config: $input.first().json.config || {},\n      topicIndex: workflowStaticData.topicIndex,\n      difficultyIndex: workflowStaticData.difficultyIndex,\n      questionTypeIndex: workflowStaticData.questionTypeIndex,\n      currentProcessedCount: workflowStaticData.currentProcessedCount,\n      updateMessage: `已更新主題索引到 ${workflowStaticData.topicIndex}`\n    }\n  }\n];"
+      },
+      "id": "8e152d92-92c8-43f7-99b5-95d0d5be66c3",
+      "name": "Update Topic Index",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從n8n中獲取工作流靜態變量\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// 終止工作流並輸出摘要\nconst currentProcessedCount = workflowStaticData.currentProcessedCount || 0;\nconst config = $input.first().json.config || {};\nconst startTime = new Date(config.startTime || new Date().toISOString());\nconst endTime = new Date();\nconst duration = (endTime - startTime) / 1000 / 60; // 分鐘\n\nconst summary = {\n  workflowComplete: true,\n  totalQuestionsGenerated: currentProcessedCount,\n  startTime: startTime.toISOString(),\n  endTime: endTime.toISOString(),\n  durationMinutes: Math.round(duration * 100) / 100,\n  averageQuestionsPerMinute: Math.round((currentProcessedCount / duration) * 100) / 100,\n  csvFilePath: config.filePath\n};\n\nconsole.log(`工作流執行完成!\\n總共生成了 ${currentProcessedCount} 個問題\\n執行時間: ${Math.round(duration)} 分鐘`);\n\n// 清理工作流程數據（可選）\nworkflowStaticData.topicIndex = 0;\nworkflowStaticData.difficultyIndex = 0;\nworkflowStaticData.questionTypeIndex = 0;\nworkflowStaticData.currentProcessedCount = 0;\n\nreturn [\n  {\n    json: summary\n  }\n];"
+      },
+      "id": "751a5cb0-d999-428d-8194-76db2b64d3a7",
+      "name": "Workflow Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        640
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Initialize Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Config": {
+      "main": [
+        [
+          {
+            "node": "Topic Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic Controller": {
+      "main": [
+        [
+          {
+            "node": "Topic Complete Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic Complete Check": {
+      "main": [
+        [
+          {
+            "node": "Workflow Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Difficulty Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Difficulty Controller": {
+      "main": [
+        [
+          {
+            "node": "Difficulty Complete Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Difficulty Complete Check": {
+      "main": [
+        [
+          {
+            "node": "Update Topic Index",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Question Type Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question Type Controller": {
+      "main": [
+        [
+          {
+            "node": "Question Type Complete Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question Type Complete Check": {
+      "main": [
+        [
+          {
+            "node": "Update Difficulty Index",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Questions": {
+      "main": [
+        [
+          {
+            "node": "Process Questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Questions": {
+      "main": [
+        [
+          {
+            "node": "Prepare CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare CSV": {
+      "main": [
+        [
+          {
+            "node": "Save To CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save To CSV": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Update Question Type Index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Question Type Index": {
+      "main": [
+        [
+          {
+            "node": "Topic Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Difficulty Index": {
+      "main": [
+        [
+          {
+            "node": "Topic Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Topic Index": {
+      "main": [
+        [
+          {
+            "node": "Topic Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Complete": {
+      "main": [
+        [
+          {
+            "node": "Topic Controller",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c831907-18d9-4054-a74b-65035ee14875",
+  "meta": {
+    "instanceId": "6d19c1bda1153e228aa9ee2614e3daf4e2cb7a4e7b61da21d6498af71502732b"
+  },
+  "id": "Y5X62R5eYRt5zD32",
+  "tags": []
+}

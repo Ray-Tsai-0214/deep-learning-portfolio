@@ -1,0 +1,12 @@
+# 這是GRPO訓練指標圖表的佔位符
+# 請將實際的訓練監控截圖保存為此檔案
+# 
+# 圖片應該包含：
+# - train/loss 訓練損失曲線
+# - train/learning_rate 學習率變化
+# - train/grad_norm 梯度範數監控
+# - train/global_step 全局步數
+# - train/epoch 訓練週期
+# 
+# 建議圖片格式：PNG
+# 建議解析度：1920x1080或更高
