@@ -10,7 +10,7 @@ This portfolio showcases three deep learning projects focusing on Large Language
 
 ## 專案列表 | Project List
 
-### 📁 [Project 1: LLM Fine-tuning Without Reasoning Information](./project-1-llm-finetuning-without-reasoning/)
+### [Project 1: LLM Fine-tuning Without Reasoning Information](./project-1-llm-finetuning-without-reasoning/)
 **技術重點 | Technical Focus:**
 - 基礎 LLM 微調技術
 - Qwen2.5 模型的應用
@@ -26,7 +26,7 @@ This portfolio showcases three deep learning projects focusing on Large Language
 
 ---
 
-### 📁 [Project 2: LLM Fine-tuning With Reasoning Information](./project-2-llm-finetuning-with-reasoning/)
+### [Project 2: LLM Fine-tuning With Reasoning Information](./project-2-llm-finetuning-with-reasoning/)
 **技術重點 | Technical Focus:**
 - 加入推理資訊的進階微調
 - DeepSeek 和 Qwen 模型比較
@@ -42,7 +42,7 @@ This portfolio showcases three deep learning projects focusing on Large Language
 
 ---
 
-### 📁 [Project 3: LLM GRPO Optimization](./project-3-llm-grpo-optimization/)
+### [Project 3: LLM GRPO Optimization](./project-3-llm-grpo-optimization/)
 **技術重點 | Technical Focus:**
 - GRPO (Group Relative Policy Optimization) 技術
 - 強化學習優化方法
@@ -121,5 +121,6 @@ For any questions or collaboration opportunities, feel free to reach out!
 ## 授權 | License
 
 本作品集中的專案僅供學習和展示用途。
+
 
 Projects in this portfolio are for educational and demonstration purposes only.
